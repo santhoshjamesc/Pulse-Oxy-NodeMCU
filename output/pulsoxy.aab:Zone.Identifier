@@ -1,4 +1,0 @@
-[ZoneTransfer]
-ZoneId=3
-ReferrerUrl=https://expo.dev/
-HostUrl=https://wf-artifacts.eascdn.net/builds/store-rg/00602d3f-d780-4f4b-897d-e151c41d48da/d2a9a45e-564e-468e-84d1-4cdc1b7bcfbf/019c8a5d-2ea4-7249-98e9-7de05dae4dce/application-d2a9a45e-564e-468e-84d1-4cdc1b7bcfbf.aab?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=75d871a1a44e598975dd84fa2341c9b0%2F20260223%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260223T120651Z&X-Amz-Expires=900&X-Amz-Signature=293f39fadbd447710f5e9608cfed843f17d1bf088ff3cb5fcdfa26d5e8e4d0f8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject
