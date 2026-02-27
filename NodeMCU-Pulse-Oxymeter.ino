@@ -13,12 +13,9 @@
 const int sampleCounts[TOTAL_SAMPLES] = { 50, 60, 70, 80, 90 };
 #define MAX_BUFFER 90
 
-<<<<<<< HEAD
-=======
 // ── Display refresh interval (ms) — don't redraw OLED more than this ─────────
 #define DISPLAY_INTERVAL 500
 
->>>>>>> f249119 (ff)
 // ── Objects ───────────────────────────────────────────────────────────────────
 U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, D1, D2);
 MAX30105 sensor;
@@ -46,9 +43,6 @@ bool hadFinger       = false;
 bool cancelRequested = false;
 
 char statusMsg[32]   = "Ready";
-<<<<<<< HEAD
-char patientName[32] = "";   // received from app via POST /start
-=======
 char patientName[32] = "";
 
 // ── Display throttle ──────────────────────────────────────────────────────────
@@ -73,7 +67,6 @@ bool shouldRedisplay() {
   }
   return false;
 }
->>>>>>> f249119 (ff)
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  CORS
@@ -97,10 +90,6 @@ void handleOptions() {
 void handleStart() {
   addCORS();
   if (!running) {
-<<<<<<< HEAD
-    // Parse patient name from JSON body: { "name": "John" }
-=======
->>>>>>> f249119 (ff)
     patientName[0] = '\0';
     if (server.hasArg("plain")) {
       StaticJsonDocument<128> doc;
@@ -163,11 +152,7 @@ void handleJSON() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-<<<<<<< HEAD
-//  OLED HELPERS
-=======
 //  OLED HELPERS  (unchanged visually)
->>>>>>> f249119 (ff)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 void drawStatusBar() {
@@ -190,10 +175,6 @@ void displayIdle() {
   } while (u8g2.nextPage());
 }
 
-<<<<<<< HEAD
-// Shown the moment finger is detected — greeting before countdown
-=======
->>>>>>> f249119 (ff)
 void displayGreeting() {
   snprintf(statusMsg, sizeof(statusMsg), "Ready");
   u8g2.firstPage();
@@ -214,10 +195,6 @@ void displayGreeting() {
   } while (u8g2.nextPage());
 }
 
-<<<<<<< HEAD
-// Shown when no finger is on sensor yet
-=======
->>>>>>> f249119 (ff)
 void displayNoFinger() {
   snprintf(statusMsg, sizeof(statusMsg), "No finger");
   u8g2.firstPage();
@@ -262,10 +239,6 @@ void displaySampling(int current, int total) {
   } while (u8g2.nextPage());
 }
 
-<<<<<<< HEAD
-// Final result screen — name header + HR + SpO2 + status label
-=======
->>>>>>> f249119 (ff)
 void displayResults() {
   String statusLabel;
   if (avgSpO2 >= 95 && avgHR >= 60 && avgHR <= 100) statusLabel = "Normal";
@@ -276,28 +249,16 @@ void displayResults() {
 
   u8g2.firstPage();
   do {
-<<<<<<< HEAD
-    // Name header
-    u8g2.setFont(u8g2_font_ncenB08_tr);
-    if (strlen(patientName) > 0) {
-      char nameLine[40];
-      snprintf(nameLine, sizeof(nameLine), "%s — Result", patientName);
-=======
     u8g2.setFont(u8g2_font_ncenB08_tr);
     if (strlen(patientName) > 0) {
       char nameLine[40];
       snprintf(nameLine, sizeof(nameLine), "%s - Result", patientName);
->>>>>>> f249119 (ff)
       u8g2.drawStr(0, 10, nameLine);
     } else {
       u8g2.drawStr(0, 10, "Result");
     }
     u8g2.drawHLine(0, 13, 128);
 
-<<<<<<< HEAD
-    // Vitals
-=======
->>>>>>> f249119 (ff)
     u8g2.setFont(u8g2_font_ncenB10_tr);
     u8g2.drawStr(0, 28, "HR:");
     u8g2.setCursor(36, 28);
@@ -309,10 +270,6 @@ void displayResults() {
     if (avgSpO2 > 0) { u8g2.print((int)avgSpO2); u8g2.print(" %"); }
     else              u8g2.print("--");
 
-<<<<<<< HEAD
-    // Status in bottom bar (Normal / Warning / Critical)
-=======
->>>>>>> f249119 (ff)
     drawStatusBar();
   } while (u8g2.nextPage());
 }
@@ -350,13 +307,6 @@ bool interruptibleCountdown(int seconds) {
       drawStatusBar();
     } while (u8g2.nextPage());
 
-<<<<<<< HEAD
-    unsigned long t = millis();
-    while (millis() - t < 1000) {
-      server.handleClient();
-      if (cancelRequested) return false;
-      delay(10);
-=======
     // Use yieldFor instead of delay — keeps server responsive during countdown
     unsigned long t = millis();
     while (millis() - t < 1000) {
@@ -364,7 +314,6 @@ bool interruptibleCountdown(int seconds) {
       yield();
       if (cancelRequested) return false;
       delay(1);
->>>>>>> f249119 (ff)
     }
   }
   return true;
@@ -375,18 +324,12 @@ bool takeSingleReading(int idx) {
 
   for (int i = 0; i < n; i++) {
     server.handleClient();
-<<<<<<< HEAD
-=======
     yield();
->>>>>>> f249119 (ff)
     if (cancelRequested || !fingerPresent()) return false;
     while (!sensor.available()) {
       sensor.check();
       server.handleClient();
-<<<<<<< HEAD
-=======
       yield();
->>>>>>> f249119 (ff)
       if (cancelRequested) return false;
     }
     redBuffer[i] = sensor.getRed();
@@ -471,8 +414,6 @@ void setup() {
   server.on("/start",  HTTP_OPTIONS, handleOptions);
   server.on("/cancel", HTTP_OPTIONS, handleOptions);
   server.on("/data",   HTTP_OPTIONS, handleOptions);
-<<<<<<< HEAD
-=======
 
   // Catch-all OPTIONS for any missed preflight
   server.onNotFound([]() {
@@ -484,7 +425,6 @@ void setup() {
     }
   });
 
->>>>>>> f249119 (ff)
   server.begin();
 
   snprintf(statusMsg, sizeof(statusMsg), "Init sensor...");
@@ -505,25 +445,26 @@ void setup() {
       u8g2.drawStr(0, 34, "Check wiring!");
       drawStatusBar();
     } while (u8g2.nextPage());
-    while (1) { server.handleClient(); delay(100); }
+    while (1) { server.handleClient(); yield(); delay(10); }
   }
 
   sensor.setup(60, 2, 2, 400, 411, 4096);
 
   displayIdle();
-  Serial.println("Ready — http://" + WiFi.localIP().toString());
+  Serial.println("Ready - http://" + WiFi.localIP().toString());
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//  LOOP
+//  LOOP  — server always gets CPU, display redraws throttled to 500ms
 // ═══════════════════════════════════════════════════════════════════════════════
 
 void loop() {
   server.handleClient();
+  yield();
 
   if (!running) {
-    displayIdle();
-    delay(100);
+    if (shouldRedisplay()) displayIdle();   // redraw at most every 500ms
+    delay(10);                              // was 100 — yield CPU sooner
     return;
   }
 
@@ -535,16 +476,16 @@ void loop() {
 
   if (!fingerPresent()) {
     hadFinger = false;
-    displayNoFinger();       // "Hi, <name>!" + "Place finger on sensor"
+    if (shouldRedisplay()) displayNoFinger();
     server.handleClient();
-    delay(200);
+    delay(10);                              // was 200
     return;
   }
 
   if (!hadFinger) {
     hadFinger = true;
-    displayGreeting();       // "Hi, <name>!" + "Keep finger still..."
-    delay(800);
+    displayGreeting();
+    yieldFor(800);                          // was delay(800) — server still runs
     if (!interruptibleCountdown(3)) {
       resetMeasurement();
       displayIdle();
@@ -563,7 +504,7 @@ void loop() {
     }
 
     server.handleClient();
-    delay(300);
+    yieldFor(300);                          // was delay(300)
   }
 
   calculateAverages();
@@ -571,12 +512,11 @@ void loop() {
   displayResults();
   Serial.println("Measurement complete");
 
-  // Hold result on OLED for 10 seconds so it can be read
-  // while still serving web/app requests
   unsigned long showUntil = millis() + 10000;
   while (millis() < showUntil) {
     server.handleClient();
-    delay(50);
+    yield();
+    delay(10);                              // was 50
   }
 
   patientName[0] = '\0';
