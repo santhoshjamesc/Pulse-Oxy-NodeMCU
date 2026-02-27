@@ -24,7 +24,7 @@ export default function AddPatient() {
     }
     try {
       await addDoc(collection(db, "users", auth.currentUser!.uid, "patients"), {
-        name,
+        name: name.trim(),
       });
       router.back();
     } catch (error: any) {
@@ -50,6 +50,7 @@ export default function AddPatient() {
           placeholderTextColor="#999"
           style={styles.input}
           onChangeText={setName}
+          value={name}
         />
 
         <TouchableOpacity style={styles.primaryButton} onPress={addPatient}>
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     fontSize: 18,
     marginBottom: 20,
+    color: "#111",
   },
   primaryButton: {
     backgroundColor: "#4f46e5",

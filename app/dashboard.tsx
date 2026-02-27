@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { useRouter } from "expo-router";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
@@ -21,28 +21,40 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        await loadPatients(firebaseUser.uid);
-      } else {
-        setUser(null);
-        setPatients([]);
-      }
+    // Auth persistence: Firebase SDK handles this automatically in React Native
+    // using AsyncStorage under the hood — no extra setup needed.
+    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
       setLoading(false);
     });
-    return () => unsubscribe();
+    return () => unsubscribeAuth();
   }, []);
 
-  const loadPatients = async (uid: string) => {
-    try {
-      const q = query(collection(db, "users", uid, "patients"), orderBy("name"));
-      const snap = await getDocs(q);
-      setPatients(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    } catch (err) {
-      console.error("Failed to load patients:", err);
+  useEffect(() => {
+    if (!user) {
+      setPatients([]);
+      return;
     }
-  };
+
+    // Real-time listener: updates patients immediately whenever Firestore changes
+    const q = query(
+      collection(db, "users", user.uid, "patients"),
+      orderBy("name")
+    );
+
+    const unsubscribeSnapshot = onSnapshot(
+      q,
+      (snap) => {
+        setPatients(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      },
+      (err) => {
+        console.error("Failed to listen to patients:", err);
+      }
+    );
+
+    // Cleanup listener when user changes or component unmounts
+    return () => unsubscribeSnapshot();
+  }, [user]);
 
   const handleSignOut = async () => {
     try {
@@ -70,7 +82,7 @@ export default function Dashboard() {
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Good day👋</Text>
-            <Text style={styles.title}>Your Loved Ones</Text>
+            <Text style={styles.title}>Your Loveds Ones</Text>
           </View>
 
           <View style={styles.headerRight}>
@@ -137,7 +149,7 @@ export default function Dashboard() {
                   style={styles.measureButton}
                   onPress={() =>
                     router.push({
-                      pathname: "/sensor",
+                      pathname: "/Sensorscreen",
                       params: { patientId: p.id, patientName: p.name },
                     })
                   }

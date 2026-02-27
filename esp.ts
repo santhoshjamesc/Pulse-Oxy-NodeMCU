@@ -1,4 +1,11 @@
 // app/lib/esp.ts
+import axios from 'axios';
+
+// ESP8266 is slow — give it time to respond
+const esp = axios.create({
+  timeout: 5000,   // 5s timeout
+});
+
 export interface ESPData {
   heartRate: number;
   spo2: number;
@@ -9,76 +16,56 @@ export interface ESPData {
   status: string;
 }
 
-/**
- * Fetch sensor data from ESP device
- * @param deviceIP IP of ESP (from OLED on boot)
- */
+// Retry helper — ESP8266 can occasionally miss a request under load
+const withRetry = async <T>(fn: () => Promise<T>, retries = 3, delayMs = 500): Promise<T> => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      console.warn(`[ESP] Retry ${i + 1}/${retries - 1}...`);
+      await new Promise(r => setTimeout(r, delayMs));
+    }
+  }
+  throw new Error('Unreachable');
+};
+
 export const fetchESPData = async (deviceIP: string): Promise<ESPData> => {
   console.log(`[ESP] Fetching data from device at ${deviceIP}`);
+  const url = `http://${deviceIP}/data`;
+  const res = await withRetry(() => esp.get<ESPData>(url));
+  console.log(`[ESP] Data received:`, res.data);
+  return res.data;
+};
+
+export const startMeasurement = async (
+  deviceIP: string,
+  patientName?: string
+): Promise<void> => {
+  console.log(`[ESP] Starting measurement on device ${deviceIP}`);
+
+  const url = `http://${deviceIP}/start`;
+  const payload = { name: patientName ?? "" };
+
   try {
-    const url = `http://${deviceIP}/data`;
-    console.log(`[ESP] GET ${url}`);
-    const res = await fetch(url);
-
+    const res = await withRetry(() => esp.post(url, payload));
     console.log(`[ESP] Response status: ${res.status}`);
-    if (!res.ok) throw new Error(`Device not reachable, status ${res.status}`);
+  } catch (error: any) {
+    console.log("[ESP] FULL ERROR OBJECT:");
+    console.log("message:", error?.message);
+    console.log("code:", error?.code);
+    console.log("config:", error?.config);
+    console.log("request:", error?.request);
+    console.log("response:", error?.response);
+    console.log("toJSON:", error?.toJSON?.());
 
-    const json = await res.json();
-    console.log(`[ESP] Data received:`, json);
-    return json as ESPData;
-  } catch (err) {
-    console.error(`[ESP] Failed to fetch data from ${deviceIP}:`, err);
-    throw err;
+    throw error;
   }
 };
 
-/**
- * Start measurement
- * @param deviceIP IP of ESP
- * @param patientName Optional name sent to OLED display
- */
-export const startMeasurement = async (deviceIP: string, patientName?: string) => {
-  console.log(`[ESP] Starting measurement on device ${deviceIP} for patient: ${patientName ?? "<no name>"}`);
-  try {
-    const url = `http://${deviceIP}/start`;
-    const payload = { name: patientName ?? "" };
-    console.log(`[ESP] POST ${url} with payload:`, payload);
-
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    console.log(`[ESP] Response status: ${res.status}`);
-    if (!res.ok) throw new Error(`Failed to start measurement, status ${res.status}`);
-    
-    const responseText = await res.text();
-    console.log(`[ESP] Response body: ${responseText}`);
-  } catch (err) {
-    console.error(`[ESP] Failed to start measurement on ${deviceIP}:`, err);
-    throw err;
-  }
-};
-
-/**
- * Cancel measurement
- * @param deviceIP IP of ESP
- */
-export const cancelMeasurement = async (deviceIP: string) => {
+export const cancelMeasurement = async (deviceIP: string): Promise<void> => {
   console.log(`[ESP] Cancelling measurement on device ${deviceIP}`);
-  try {
-    const url = `http://${deviceIP}/cancel`;
-    console.log(`[ESP] POST ${url}`);
-
-    const res = await fetch(url, { method: "POST" });
-    console.log(`[ESP] Response status: ${res.status}`);
-    if (!res.ok) throw new Error(`Failed to cancel measurement, status ${res.status}`);
-
-    const responseText = await res.text();
-    console.log(`[ESP] Response body: ${responseText}`);
-  } catch (err) {
-    console.error(`[ESP] Failed to cancel measurement on ${deviceIP}:`, err);
-    throw err;
-  }
+  const url = `http://${deviceIP}/cancel`;
+  const res = await withRetry(() => esp.post(url));
+  console.log(`[ESP] Response status: ${res.status}`);
 };

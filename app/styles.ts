@@ -1,0 +1,178 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#f8fafc" },
+  scrollContent: { padding: 20, paddingBottom: 48 },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 24,
+    marginTop: 8,
+  },
+  greeting: { fontSize: 15, color: "#64748b", fontWeight: "500", marginBottom: 2 },
+  title: { fontSize: 28, fontWeight: "800", color: "#0f172a", letterSpacing: -0.5 },
+  backBtn: { backgroundColor: "#f1f5f9", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 12, marginTop: 4 },
+  backText: { color: "#334155", fontSize: 14, fontWeight: "600" },
+
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  cardLabel: {
+    fontSize: 12,
+    color: "#94a3b8",
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 12,
+  },
+
+  ipInput: {
+    backgroundColor: "#f1f5f9",
+    color: "#0f172a",
+    padding: 14,
+    borderRadius: 12,
+    fontSize: 16,
+    fontWeight: "600",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+
+  hrRow: { flexDirection: "row", alignItems: "center", marginBottom: 16, gap: 14 },
+  hrOrb: {
+    flex: 1,
+    backgroundColor: "#fef2f2",
+    borderRadius: 20,
+    paddingVertical: 24,
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: "#fecaca",
+  },
+  hrIcon: { fontSize: 28, marginBottom: 4 },
+  hrValue: { fontSize: 46, fontWeight: "800", color: "#dc2626", letterSpacing: -2, lineHeight: 52 },
+  hrUnit: { fontSize: 14, color: "#ef4444", fontWeight: "600", marginTop: 2 },
+
+  sideMetrics: { flex: 0.55 },
+  metricBox: {
+    backgroundColor: "#f8fafc",
+    borderRadius: 16,
+    padding: 14,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  metricIcon: { fontSize: 20, marginBottom: 4 },
+  metricValue: { fontSize: 22, fontWeight: "800", color: "#0f172a", letterSpacing: -0.5 },
+  metricLabel: { fontSize: 11, color: "#94a3b8", fontWeight: "600", marginTop: 2 },
+
+  measuringRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#eef2ff",
+    borderRadius: 12,
+    padding: 12,
+  },
+  measuringText: { color: "#4f46e5", fontSize: 14, fontWeight: "600" },
+
+  assessmentCard: {
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 14,
+    borderWidth: 1.5,
+  },
+  assessmentLabel: {
+    fontSize: 16,
+    fontWeight: "800",
+    marginBottom: 6,
+    letterSpacing: -0.2,
+  },
+  assessmentDetail: {
+    fontSize: 13,
+    fontWeight: "500",
+    lineHeight: 20,
+    opacity: 0.85,
+  },
+  urgentBadge: {
+    marginTop: 12,
+    backgroundColor: "#dc262615",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "#fecaca",
+  },
+  urgentText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#dc2626",
+  },
+
+  saveStatusRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    marginBottom: 14,
+    borderWidth: 1.5,
+  },
+  saveStatusText: {
+    fontSize: 14,
+    fontWeight: "700",
+  },
+
+  errorCard: {
+    backgroundColor: "#fef2f2",
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 12,
+    borderWidth: 1.5,
+    borderColor: "#fecaca",
+  },
+  errorText: { color: "#dc2626", fontSize: 14, fontWeight: "600" },
+
+  primaryButton: {
+    backgroundColor: "#6366f1",
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: "center",
+    marginBottom: 12,
+    shadowColor: "#6366f1",
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+  },
+  primaryButtonText: { color: "#fff", fontSize: 17, fontWeight: "700", letterSpacing: 0.3 },
+
+  secondaryButton: {
+    backgroundColor: "#f1f5f9",
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: "center",
+    marginBottom: 12,
+    borderWidth: 1.5,
+    borderColor: "#e2e8f0",
+  },
+  secondaryButtonText: { color: "#334155", fontSize: 17, fontWeight: "700" },
+
+  tipCard: {
+    backgroundColor: "#f1f5f9",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    marginTop: 4,
+  },
+  tipText: { fontSize: 13, color: "#64748b", lineHeight: 20, fontWeight: "500" },
+});
